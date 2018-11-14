@@ -19,6 +19,10 @@ def load_data(filepath):
     data = []
     labels = []
 
+    for d in csv_data:
+        data.append(d[:-1])
+        labels.append(d[-1])
+
     return np.array(data), np.array(labels)
 
 train_dataset, train_labels = load_data(ccf_train_filepath)
@@ -33,8 +37,8 @@ pred = tf.argmin(knn_prediction, 0)
 
 with tf.Session() as tf_session:
     missed = 0
-
-    for i in xrange(len(test_dataset)):
+    print(len(test_dataset))
+    for i in range(592):
         knn_index = tf_session.run(pred, feed_dict={train_pl: train_dataset, test_pl: test_dataset[i]})
 
         print("Predicted class {} -- True class {}".format(train_labels[knn_index], test_labels[i]))
@@ -44,4 +48,4 @@ with tf.Session() as tf_session:
 
     tf.summary.FileWriter("../samples/article/logs", tf_session.graph)
 
-print "Missed: {} -- Total: {}".format(missed, len(test_dataset))
+print("Missed: {} -- Total: {}".format(missed, 592))
